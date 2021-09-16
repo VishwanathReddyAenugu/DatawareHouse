@@ -16,11 +16,11 @@ https://drive.google.com/file/d/1pzNTYDmbCQcSNl6a009VEEsmWhigEoH_/view?usp=shari
 1) Identifying data consistensy issues and clean and integrate the data sources.
 2) create a star schema with fact and dimension tables in sql
 3) Obtain the following reports
-   	Number of flights that are delayed on departure per month. (delay more than 10 min)  
-	  Number of flights with taxi in time above 15min per airport per month.
+   	1) Number of flights that are delayed on departure per month. (delay more than 10 min). 
+	2) Number of flights with taxi in time above 15min per airport per month.
 
-
-
+### Star Schema
+![ss](https://user-images.githubusercontent.com/90732088/133529689-71c22cdb-e10b-4de7-ad8f-ce7f7abd8964.jpg)
 
 ### ETL process
 ![1](https://user-images.githubusercontent.com/90732088/133526016-5f88bbc9-82a9-484a-b9b8-562d8f560dc7.jpg)
