@@ -1,7 +1,7 @@
 --Stage Area 1:
 
-  Drop Table stagearea1 CASCADE CONSTRAINTS;
- CREATE TABLE stagearea1
+Drop Table stagearea1 CASCADE CONSTRAINTS;
+CREATE TABLE stagearea1
   (       
     pk                   NUMBER NOT NULL,
     flightDate           DATE, 
@@ -34,9 +34,6 @@ CREATE OR REPLACE TRIGGER trig_etl
      INSERT INTO logETL VALUES (logSeq.nextval,'stageArea1',SYSDATE,'UPDATE',:OLD.pk,NULL);
      END IF;
    END;
-
-
-
 -- Loading data into stage area1 from data sources
 
 INSERT INTO stagearea1(pk, flightDate, destAirportcode, DESTINTION_CITY ,departureDelay, taxiIn, source )
@@ -70,6 +67,3 @@ UPDATE stagearea1 SET DESTINTION_CITY = 'Cleveland' where DESTAIRPORTCODE = 'CLE
 UPDATE stagearea1 SET DESTINTION_CITY = 'Irvine' where DESTAIRPORTCODE = 'SNA';
 UPDATE stagearea1 SET DESTINTION_CITY = 'Philadelphia ' where DESTAIRPORTCODE = 'PHL';
 UPDATE stagearea1 SET DESTINTION_CITY = 'Vineyard Haven ' where DESTAIRPORTCODE = 'MVY';
-
-
-
