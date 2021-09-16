@@ -51,11 +51,8 @@ create sequence FACT_SEQ
 start with 1
 increment by 1;
 
-
-
-
 -- Stage Area 1
-  Drop Table stagearea1 CASCADE CONSTRAINTS;
+Drop Table stagearea1 CASCADE CONSTRAINTS;
  CREATE TABLE stagearea1
   (       
     pk                   NUMBER NOT NULL,
@@ -90,12 +87,8 @@ CREATE OR REPLACE TRIGGER trig_etl
      END IF;
    END;
 
-  
-  
-  
-  
   -- Loading data from sources into stage-area 1
-  INSERT INTO stagearea1(pk, flightDate, destAirportcode, DESTINTION_CITY ,departureDelay, taxiIn, source )
+INSERT INTO stagearea1(pk, flightDate, destAirportcode, DESTINTION_CITY ,departureDelay, taxiIn, source )
 SELECT srcseq.nextval, FL_DATE, DEST,DESTINTION_CITY,DEP_DELAY, TAXI_IN, 'year 2017' FROM SOURCE1;
 
 INSERT INTO stagearea1(pk, flightDate, destAirportcode, DESTINTION_CITY ,departureDelay, taxiIn, source )
@@ -110,13 +103,6 @@ UPDATE stagearea1 SET TAXIIN = 0 WHERE TAXIIN < 0;
 
 UPDATE stagearea1 SET DESTINTION_CITY = 'Not Known' WHERE DESTINTION_CITY = NULL;
 UPDATE stagearea1 SET DESTINTION_CITY = 'Not Known' WHERE DESTINTION_CITY = '-';
-
-
-
-
-
-
-
 
 
 
@@ -138,15 +124,9 @@ UPDATE stagearea1 SET DESTINTION_CITY = 'Irvine' where DESTAIRPORTCODE = 'SNA';
 UPDATE stagearea1 SET DESTINTION_CITY = 'Philadelphia ' where DESTAIRPORTCODE = 'PHL';
 UPDATE stagearea1 SET DESTINTION_CITY = 'Vineyard Haven ' where DESTAIRPORTCODE = 'MVY';
 
-
-
-
-
-
 -- stage area 2
 
 Drop Table stagearea2 CASCADE CONSTRAINTS;
-
 CREATE TABLE stagearea2 AS
 SELECT PK, 
 to_number(to_char(STAGEAREA1.FLIGHTDATE,'YYYY')) as The_year,
@@ -163,8 +143,6 @@ DROP TABLE tmp1_TD CASCADE CONSTRAINTS;
 CREATE TABLE tmp1_TD AS SELECT THE_YEAR, THE_MONTH, AIRPORTID, COUNT(*) no_Of_Flights_TD FROM STAGEAREA2 where TAXIINTIMEINMIN > 0 GROUP by THE_YEAR, THE_MONTH, AIRPORTID 
 ORDER BY THE_YEAR, THE_MONTH, AIRPORTID;
 
-
-
 --TIME DIM
 DROP TABLE tmp_time CASCADE CONSTRAINTS;
 CREATE TABLE tmp_time (THE_YEAR,THE_MONTH) AS SELECT DISTINCT THE_YEAR, THE_MONTH FROM STAGEAREA2 ORDER BY THE_YEAR, THE_MONTH;
@@ -176,10 +154,10 @@ CREATE TABLE tmp_airport AS SELECT DISTINCT AIRPORTID, DESTINTION_CITY FROM STAG
 --Populating Time dimenion
 insert into time_dim select timekey_Seq.nextval, the_year, the_month from tmp_time;
 
- --Populating Airport dimension
+--Populating Airport dimension
 insert into airport_dim select airportkey_Seq.nextval, AIRPORTID , DESTINTION_CITY ,NULL, NULL from TMP_airport;
 
- --Populating Fact table
+--Populating Fact table
 DROP TABLE TMP_FACT;
 CREATE TABLE TMP_FACT AS SELECT tmp1_TD.THE_YEAR, tmp1_TD.THE_MONTH, tmp1_TD.AIRPORTID, tmp1_TD.NO_OF_FLIGHTS_TD, tmp1_DD.NO_OF_FLIGHTS_DD 
 from tmp1_TD FULL OUTER JOIN tmp1_DD ON
@@ -189,10 +167,8 @@ INSERT INTO FACT_flights (FACT_KEY, FK1_TIME_KEY, FK2_AIRPORT_KEY, NoOfFlightsDe
 SELECT FACT_SEQ.nextval, TIME_DIM.TIME_KEY, Airport_DIM.AIRPORT_KEY, NO_OF_FLIGHTS_DD, NO_OF_FLIGHTS_TD FROM TIME_DIM, AIRPORT_DIM,TMP_FACT
 WHERE TMP_FACT.THE_MONTH=TIME_DIM.MONTH AND TMP_FACT.THE_YEAR=TIME_DIM.YEAR AND AIRPORT_DIM.AIRPORT_CODE=TMP_FACT.AIRPORTID;
 
---SCD-3
+--slowly changing dimension type-3
 UPDATE AIRPORT_DIM ad SET ad.CITY_NAME_NEW = 'NEW_NAME', ad.EFFECTIVE_DATE = sysdate WHERE ad.AIRPORT_CODE = 'CODE';
-
-
 
 
 -- Reports
