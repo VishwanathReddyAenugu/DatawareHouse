@@ -1,5 +1,4 @@
 --Stage Area 1:
-
 Drop Table stagearea1 CASCADE CONSTRAINTS;
 CREATE TABLE stagearea1
 (       
