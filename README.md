@@ -1,4 +1,4 @@
-# DatawareHouse   
+# Data wareHouse   
 
 ### Project Aim:
 #### Create a model data warehouse for NY-Airlines by integrating data from two sources. The data sets consist of information about various domestic flights traveling from New York City (JFK Airport) to other airport destinations in the United States. This would facilitate the airline quality assurance manager to quickly access reports of the key performance indices (KPI’s) of interest.
